@@ -87,8 +87,14 @@ public class OioBluetoothChannel extends OioByteStreamChannel {
 
         remoteDeviceAddress = (BluetoothDeviceAddress) remoteAddress;
 
-        BlueCoveImpl.setConfigProperty(BlueCoveConfigProperties.PROPERTY_CONNECT_TIMEOUT, String.valueOf(config.getConnectTimeoutMillis()));
-        streamConnection = (StreamConnection) Connector.open(remoteDeviceAddress.value(), Connector.READ_WRITE, true);
+        if (config.getConnectTimeoutMillis() <= 0) {
+
+            streamConnection = (StreamConnection) Connector.open(remoteDeviceAddress.value());
+        } else {
+
+            BlueCoveImpl.setConfigProperty(BlueCoveConfigProperties.PROPERTY_CONNECT_TIMEOUT, String.valueOf(config.getConnectTimeoutMillis()));
+            streamConnection = (StreamConnection) Connector.open(remoteDeviceAddress.value(), Connector.READ_WRITE, true);
+        }
 
         inputStream = streamConnection.openInputStream();
         activate(inputStream, streamConnection.openOutputStream());
