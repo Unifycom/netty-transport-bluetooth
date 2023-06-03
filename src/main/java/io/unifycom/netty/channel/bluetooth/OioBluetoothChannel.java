@@ -23,7 +23,7 @@ public class OioBluetoothChannel extends OioByteStreamChannel {
 
     private boolean opened = true;
 
-    private BluetoothChannelConfig config;
+    private final BluetoothChannelConfig config;
 
     private InputStream inputStream;
     private StreamConnection streamConnection;
@@ -146,5 +146,39 @@ public class OioBluetoothChannel extends OioByteStreamChannel {
     public boolean isOpen() {
 
         return opened;
+    }
+
+    @Override
+    protected AbstractUnsafe newUnsafe() {
+
+        return new AbstractUnsafe() {
+            @Override
+            public void connect(
+                    final SocketAddress remoteAddress,
+                    final SocketAddress localAddress, final ChannelPromise promise) {
+
+                if (!promise.setUncancellable() || !ensureOpen(promise)) {
+
+                    return;
+                }
+
+                try {
+
+                    final boolean wasActive = isActive();
+
+                    doConnect(remoteAddress, localAddress);
+                    promise.setSuccess();
+
+                    if (!wasActive && isActive()) {
+                        pipeline().fireChannelActive();
+                    }
+
+                } catch (Throwable t) {
+
+                    promise.setFailure(t);
+                    closeIfClosed();
+                }
+            }
+        };
     }
 }
