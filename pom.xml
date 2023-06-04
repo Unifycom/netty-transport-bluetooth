@@ -8,6 +8,35 @@
     <artifactId>netty-transport-bluetooth</artifactId>
     <version>${revision}</version>
 
+    <name>Netty/Transport/Bluetooth</name>
+    <description>A netty bluetooth pipeline using Bluecove</description>
+    <url>https://github.com/Unifycom/netty-transport-bluetooth</url>
+
+    <developers>
+        <developer>
+            <id>unifycom</id>
+            <name>Jerry Huang</name>
+            <email>unifycom@outlook.com</email>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git@github.com:Unifycom/netty-transport-bluetooth.git</connection>
+        <developerConnection>scm:git@github.com:Unifycom/netty-transport-bluetooth.git</developerConnection>
+        <url>https://github.com/Unifycom/netty-transport-bluetooth</url>
+    </scm>
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/Unifycom/netty-transport-bluetooth/issues</url>
+    </issueManagement>
+
     <properties>
         <revision>1.0.0</revision>
 
@@ -27,6 +56,8 @@
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <maven-flatten-plugin.version>1.5.0</maven-flatten-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+        <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
+        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
     </properties>
 
     <dependencies>
@@ -88,6 +119,16 @@
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>${nexus-staging-maven-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -133,6 +174,50 @@
             </distributionManagement>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <show>private</show>
+                            <nohelp>true</nohelp>
+                            <charset>UTF-8</charset>
+                            <encoding>UTF-8</encoding>
+                            <docencoding>UTF-8</docencoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
